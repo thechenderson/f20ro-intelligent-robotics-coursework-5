@@ -1,5 +1,5 @@
 #!/bin/bash
-gnome-terminal -- .bin/bash -c "yarpserver; exec bash"
+gnome-terminal -- /bin/bash -c "yarpserver; exec bash"
 gnome-terminal -- /bin/bash -c "iCub_SIM; exec bash"
 gnome-terminal -- /bin/bash -c "yarpview -name /view/left; exec bash"
 sleep 1
