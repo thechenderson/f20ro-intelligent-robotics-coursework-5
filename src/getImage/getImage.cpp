@@ -12,8 +12,7 @@ imagePort.open("/tutorial/image/in"); // give the port a name
  while (1) {
  ImageOf<PixelRgb> *image = imagePort.read(); // read an image
  if (image!=NULL) { // check we actually got something
- printf("We got an image of size %dx%d\n", image->width(), image-
->height());
+ printf("We got an image of size %dx%d\n", image->width(), image->height());
  }
  }
  return 0;
