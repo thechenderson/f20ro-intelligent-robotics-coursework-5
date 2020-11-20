@@ -31,8 +31,10 @@
 *.out
 *.app
 
+# @him2 user specific buildinfo 
+*.user
 
-# build directories
+# @him2 build directories
 src/findLocation/build/
 src/getImage/build/
 src/lookAtLocation/build/
