@@ -10,6 +10,7 @@ project(applyLinearFilter)
 
 # Find YARP.  Point the YARP_DIR environment variable at your build.
 find_package(YARP REQUIRED)
+FIND_PACKAGE(OpenCV REQUIRED)
 
 # Search for source code.
 file(GLOB folder_source *.cpp *.cc *.c)
@@ -30,10 +31,12 @@ foreach(header_file ${folder_header})
   include_directories(${p})
 endforeach(header_file ${folder_header})
 
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 # Set up our main executable.
 if(folder_source)
   add_executable(${PROJECT_NAME} ${folder_source} ${folder_header})
-  target_link_libraries(${PROJECT_NAME} ${YARP_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} ${YARP_LIBRARIES} ${OpenCV_LIBS})
 else()
   message(FATAL_ERROR "No source code files found. Please add something")
 endif()
