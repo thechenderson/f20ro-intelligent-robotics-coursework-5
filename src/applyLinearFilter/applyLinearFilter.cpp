@@ -1,4 +1,8 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+/*
+ * Edge detection using the a convolutional filter with the Sobel operator.
+ * Author for F21IRO @ Hamish MacKinnon, him2
+ */
 
  #include <stdio.h>
  #include <yarp/os/Network.h>
@@ -9,70 +13,65 @@
  #include <yarp/os/Property.h>
  #include <string>
 
+ #include <yarp/cv/Cv.h>
+ #include <opencv2/opencv.hpp>
+// #include "imageFormatConverter.hpp"
+
     using namespace yarp::sig;
     using namespace yarp::os;
 
+    // parameter for the Sobel filtering operation
+    const auto ddepth = CV_16S;    // number of bits per pixel for colour depth
+
     int main(int argc, char *argv[])
     {
+
+
+        // Network construction here allows for the use of ports
         Network yarp;
 
         BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
-        BufferedPort<ImageOf<PixelRgb> > outPort;
-        BufferedPort<Vector> targetPort;
+        BufferedPort<ImageOf<PixelMono> > outPort;
 
-        imagePort.open("/imageProc/image/in");  // give the port a name
-        outPort.open("/imageProc/image/out");
-        targetPort.open("/tutorial/target/out");
+        imagePort.open("/imageProc/edgeDetection/in");  // give the port a name
+        outPort.open("/imageProc/edgeDetection/out");
 
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
-            ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
+            ImageOf<PixelMono> &outImage = outPort.prepare(); //get an output image
 
-            outImage=*image;
+            if (image!=nullptr) { // check we actually got something
 
-            if (image!=NULL) { // check we actually got something
-                //printf("We got an image of size %dx%d\n", image->width(), image->height());
-                double xMean = 0;
-                double yMean = 0;
-                int ct = 0;
-                for (int x=0; x<image->width(); x++) {
-                    for (int y=0; y<image->height(); y++) {
-                        PixelRgb& pixel = image->pixel(x,y);
-                        // very simple test for blueishness
-                        // make sure blue level exceeds red and green by a factor of 2
-                        if (pixel.b>pixel.r*1.2+10 && pixel.b>pixel.g*1.2+10) {
-                            // there's a blueish pixel at (x,y)!
-                            // let's find the average location of these pixels
-                            xMean += x;
-                            yMean += y;
-                            ct++;
+                // convert to OpenCV format
+//                cv::Mat cvImage = coursework::toCvMat(*image);
+                cv::Mat cvImage = yarp::cv::toCvMat(*image);
 
-                            outImage(x,y).r=255;
-                        }
-                    }
-                }
-                if (ct>0) {
-                    xMean /= ct;
-                    yMean /= ct;
-                }
-                if (ct>(image->width()/20)*(image->height()/20)) {
-                   printf("Best guess at blue target: %g %g\n", xMean, yMean);
-                   Vector& v = targetPort.prepare();
-                    v.resize(3);
-                    v[0] = xMean;
-                    v[1] = yMean;
-                    v[2] = 1;
-                    targetPort.write();
-                } else {
-                    Vector& v = targetPort.prepare();
-                    v.resize(3);
-                    v[0] = 0;
-                    v[1] = 0;
-                    v[2] = 0;
-                    targetPort.write();
-                }
+                // remove noise using a blur, then remove colour
+                cv::Mat blurredImg;
+                cv::GaussianBlur(cvImage, blurredImg, cv::Size(3, 3), 0, 0);
 
-               outPort.write();
+                cv::Mat grayscaleImg;
+                cv::cvtColor(blurredImg, grayscaleImg, cv::COLOR_BGR2GRAY);
+
+                // detect edges!
+                cv::Mat x_derivatives, y_derivatives;
+                cv::Sobel(grayscaleImg, x_derivatives, ddepth, 1, 0);
+                cv::Sobel(grayscaleImg, y_derivatives, ddepth, 0, 1);
+
+                // Approximate the true edges as a sum of x and y changes
+                // Directions of derivatives don't matter, so remove the sign then combine.
+                cv::Mat abs_x_derivatives, abs_y_derivatives;
+                cv::convertScaleAbs(x_derivatives, abs_x_derivatives);
+                cv::convertScaleAbs(y_derivatives, abs_y_derivatives);
+
+                cv::Mat edges;
+                const float dimension_weight = 0.5;
+                cv::addWeighted(abs_x_derivatives, dimension_weight, abs_y_derivatives, dimension_weight, 0, edges);
+
+                // return to yarp format
+//                outImage = coursework::fromCvMat<PixelMono>(edges);
+                outImage = yarp::cv::fromCvMat<PixelMono>(edges);
+                outPort.write();
             }
        }
    return 0;
