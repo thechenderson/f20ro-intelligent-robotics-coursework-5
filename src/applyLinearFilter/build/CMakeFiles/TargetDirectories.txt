@@ -1,3 +1,0 @@
-/home/user/labs/lab3/look_at_location/build/CMakeFiles/rebuild_cache.dir
-/home/user/labs/lab3/look_at_location/build/CMakeFiles/edit_cache.dir
-/home/user/labs/lab3/look_at_location/build/CMakeFiles/lookatlocation.dir
