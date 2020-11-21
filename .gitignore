@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# @him2 user specific buildinfo 
+*.user
+
+# @him2 build directories
+src/findLocation/build/
+src/getImage/build/
+src/lookAtLocation/build/
+src/applyLinearFilter/build/
