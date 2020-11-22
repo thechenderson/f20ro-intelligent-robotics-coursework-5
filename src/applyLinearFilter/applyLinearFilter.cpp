@@ -35,7 +35,7 @@
 
         imagePort.open("/imageProc/edgeDetection/in");  // give the port a name
         outPort.open("/imageProc/edgeDetection/out");
-
+        
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelMono> &outImage = outPort.prepare(); //get an output image
