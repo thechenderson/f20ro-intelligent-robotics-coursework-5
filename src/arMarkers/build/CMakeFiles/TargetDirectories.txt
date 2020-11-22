@@ -1,0 +1,3 @@
+/home/user/f20ro-intelligent-robotics-coursework-5/src/arMarkers/build/CMakeFiles/rebuild_cache.dir
+/home/user/f20ro-intelligent-robotics-coursework-5/src/arMarkers/build/CMakeFiles/edit_cache.dir
+/home/user/f20ro-intelligent-robotics-coursework-5/src/arMarkers/build/CMakeFiles/arMarkers.dir
