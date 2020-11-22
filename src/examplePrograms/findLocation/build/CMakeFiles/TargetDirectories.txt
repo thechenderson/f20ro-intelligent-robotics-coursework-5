@@ -1,3 +1,0 @@
-/home/user/labs/lab3/find_location/build/CMakeFiles/rebuild_cache.dir
-/home/user/labs/lab3/find_location/build/CMakeFiles/edit_cache.dir
-/home/user/labs/lab3/find_location/build/CMakeFiles/findlocation.dir

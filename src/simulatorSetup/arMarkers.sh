@@ -22,6 +22,6 @@ sleep 1
 gnome-terminal -- /bin/bash -c "./../arMarkers/build/arMarkers"
 gnome-terminal -- /bin/bash -c "yarpview --name /view/arMarkers; exec bash"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /imageProc/detectMarker/in;"
+gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /imageProc/image/in;"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /imageProc/detectMarker/out /view/detectMarker;"
+gnome-terminal -- /bin/bash -c "yarp connect /imageProc/image/out /view/arMarkers;"

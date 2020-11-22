@@ -10,7 +10,7 @@ project(arMarkers)
 
 # Find YARP.  Point the YARP_DIR environment variable at your build.
 find_package(YARP REQUIRED)
-FIND_PACKAGE(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED)
 
 # Search for source code.
 file(GLOB folder_source *.cpp *.cc *.c)
