@@ -39,4 +39,4 @@ src/findLocation/build/
 src/getImage/build/
 src/lookAtLocation/build/
 src/applyLinearFilter/build/
-srd/arMarkers/build/
+src/arMarkers/build/
