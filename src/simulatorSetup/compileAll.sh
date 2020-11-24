@@ -1,5 +1,23 @@
 #!/bin/bash
-#  go to src folder
+
+# load optional flags
+REBUILD=0
+while [ ! $# -eq 0 ]
+do
+	case "$1" in
+		--help | -h)
+			echo "Use --rebuild to clean all and rebuild - default does not clean."
+			exit
+			;;
+		--rebuild | -r)
+			REBUILD=1
+			;;
+	esac
+	shift
+done
+
+#  perform builds!
+#  first go to src folder
 cd ..
 for dir in */; do 
     # skip folders that don't have projects that we want to build
@@ -10,7 +28,14 @@ for dir in */; do
         echo "building " $dir
         
         # remove / character from the end of $dir before using in mkdir
-        rm -r ${dir%?}/build
+        if [ $REBUILD == 1 ]; then
+            echo "Cleaning up before building"
+            rm -r ${dir%?}/build
+
+        else
+            echo "Building without deleting existing build directory first."
+        
+        fi
         mkdir ${dir%?}/build
         cd ${dir%?}/build
         cmake ..
