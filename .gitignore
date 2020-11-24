@@ -35,13 +35,7 @@
 *.user
 
 # @him2 build directories
-src/findLocation/build/
-src/getImage/build/
-src/lookAtLocation/build/
-src/applyLinearFilter/build/
-src/arMarkers/build/
-src/faceDetection/build/
-
+src/**/build
 
 #VS Code
 .vscode/*
