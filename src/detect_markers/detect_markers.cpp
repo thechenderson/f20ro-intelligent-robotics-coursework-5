@@ -30,8 +30,14 @@ the use of this software, even if advised of the possibility of such damage.
 */
 
 
-#include <opencv2/highgui.hpp>
-#include <opencv2/aruco.hpp>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <yarp/sig/Image.h>
+#include <yarp/sig/ImageDraw.h>
+#include <yarp/sig/ImageFile.h>
+#include <yarp/cv/Cv.h>
+ 
 #include <iostream>
 
 using namespace std;

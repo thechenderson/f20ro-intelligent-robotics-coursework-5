@@ -6,8 +6,7 @@
 # Replace "yarpy" with whatever your executable should be called.
 
 cmake_minimum_required(VERSION 3.5)
-project(applyLinearFilter)
-
+project(detect_markers)
 
 # Find YARP.  Point the YARP_DIR environment variable at your build.
 find_package(YARP REQUIRED)

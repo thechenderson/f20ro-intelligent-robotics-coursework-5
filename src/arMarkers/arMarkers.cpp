@@ -8,9 +8,25 @@
  #include <yarp/os/Time.h>
  #include <yarp/os/Property.h> 
  #include <string>
-
- #include <opencv2/aruco.hpp>
     
+ #include <stdio.h>
+ #include <yarp/os/Network.h>
+ #include <yarp/os/BufferedPort.h>
+ #include <yarp/sig/Image.h>
+ #include <yarp/sig/Vector.h>
+ #include <yarp/os/Time.h>
+ #include <yarp/os/Property.h>
+ #include <string>
+
+
+
+ #include <yarp/cv/Cv.h>
+ #include <opencv2/opencv.hpp>
+ #include <opencv2/aruco.hpp>
+
+
+
+
     using namespace yarp::sig;
     using namespace yarp::os;
     
@@ -20,10 +36,13 @@
     
         BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
         BufferedPort<ImageOf<PixelRgb> > outPort;
-    
+
         imagePort.open("/imageProc/image/in");  // give the port a name
         outPort.open("/imageProc/image/out");
-    
+        
+        //Create the dictionary of markers to compare against
+        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
@@ -36,15 +55,16 @@
                 //Code adapted from https://docs.opencv.org/master/d5/dae/tutorial_aruco_detection.html
                 //Setup the marker detection function
                 std::vector<int> markerIds;
-                std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-                cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
-                cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-                cv::aruco::detectMarkers(cvImage, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+                std::vector<std::vector<cv::Point2f>> markerCorners;
+
+                cv::aruco::detectMarkers(cvImage, dictionary, markerCorners, markerIds);
+
+               
 
                 //Output the markers onto the image
                 cv::Mat outputImage = cvImage.clone();
                 cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
-                ouput = yarp::cv::fromCvMat<PixelRgb>;
+                output = yarp::cv::fromCvMat<PixelRgb>;
                 outPort.write();
 
 
