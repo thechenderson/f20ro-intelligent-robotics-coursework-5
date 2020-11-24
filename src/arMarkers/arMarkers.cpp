@@ -18,12 +18,10 @@
  #include <yarp/os/Property.h>
  #include <string>
 
-
-
- #include <yarp/cv/Cv.h>
  #include <opencv2/opencv.hpp>
  #include <opencv2/aruco.hpp>
 
+#include "../applyLinearFilter/imageFormatConverter.hpp"
 
 
 
@@ -50,7 +48,7 @@
             if(image!=nullptr){
 
                 //Convert yarp image to CV format
-                cv::Mat cvImage = yarp::cv::toCvMat(*image);
+                cv::Mat cvImage = coursework::toCvMat(*image);
 
                 //Code adapted from https://docs.opencv.org/master/d5/dae/tutorial_aruco_detection.html
                 //Setup the marker detection function
@@ -64,7 +62,7 @@
                 //Output the markers onto the image
                 cv::Mat outputImage = cvImage.clone();
                 cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
-                output = yarp::cv::fromCvMat<PixelRgb>;
+                outImage = coursework::fromCvMat<PixelRgb>(outputImage);
                 outPort.write();
 
 

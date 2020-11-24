@@ -36,7 +36,6 @@ the use of this software, even if advised of the possibility of such damage.
 #include <yarp/sig/Image.h>
 #include <yarp/sig/ImageDraw.h>
 #include <yarp/sig/ImageFile.h>
-#include <yarp/cv/Cv.h>
  
 #include <iostream>
 
