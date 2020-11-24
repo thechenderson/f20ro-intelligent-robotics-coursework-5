@@ -21,5 +21,7 @@ namespace coursework {
 
 ::cv::Mat toCvMat(yarp::sig::ImageOf<yarp::sig::PixelRgb>& yarpImage);
 yarp::sig::ImageOf<yarp::sig::PixelRgb> fromCvMat(::cv::Mat& cvImage);
+yarp::sig::ImageOf<yarp::sig::PixelMono> monoFromCvMat(::cv::Mat& cvImage);
+
 
 } // namespace coursework

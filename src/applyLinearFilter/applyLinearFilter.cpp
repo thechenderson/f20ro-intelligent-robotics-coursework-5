@@ -13,11 +13,9 @@
  #include <yarp/os/Property.h>
  #include <string>
 
-
-
- #include <yarp/cv/Cv.h>
+// #include <yarp/cv/Cv.h>
  #include <opencv2/opencv.hpp>
-// #include "imageFormatConverter.hpp"
+ #include "imageFormatConverter.hpp"
 
     using namespace yarp::sig;
     using namespace yarp::os;
@@ -45,8 +43,8 @@
             if (image!=nullptr) { // check we actually got something
 
                 // convert to OpenCV format
-//                cv::Mat cvImage = coursework::toCvMat(*image);
-                cv::Mat cvImage = yarp::cv::toCvMat(*image);
+                cv::Mat cvImage = coursework::toCvMat(*image);
+//                cv::Mat cvImage = yarp::cv::toCvMat(*image);
 
                 // remove noise using a blur, then remove colour
                 cv::Mat blurredImg;
@@ -71,8 +69,8 @@
                 cv::addWeighted(abs_x_derivatives, dimension_weight, abs_y_derivatives, dimension_weight, 0, edges);
 
                 // return to yarp format
-//                outImage = coursework::fromCvMat<PixelMono>(edges);
-                outImage = yarp::cv::fromCvMat<PixelMono>(edges);
+                outImage = coursework::monoFromCvMat(edges);
+//                outImage = yarp::cv::fromCvMat<PixelMono>(edges);
                 outPort.write();
             }
        }

@@ -26,7 +26,7 @@ namespace coursework {
 {
     ::cv::Mat outMat (yarpImage.height(), yarpImage.width(), CV_8UC3,
                       yarpImage.getRawImage(), yarpImage.getRowSize()); // RVO
-    ::cv::cvtColor(outMat, outMat, CV_BGR2RGB);
+    ::cv::cvtColor(outMat, outMat,  cv::COLOR_BGR2RGB);
 
     return outMat;
 }
@@ -41,7 +41,7 @@ yarp::sig::ImageOf<yarp::sig::PixelRgb> fromCvMat(::cv::Mat& cvImage)
     yarp::sig::ImageOf<yarp::sig::PixelRgb> outImg;
     // Checking cv::Mat::type() compatibility with the T PixelType
     assert(CV_8UC3 == cvImage.type());
-    ::cv::cvtColor(cvImage, cvImage, CV_BGR2RGB);
+    ::cv::cvtColor(cvImage, cvImage,  cv::COLOR_BGR2RGB);
 
     // Check the cv::Mat alignment
     if (cvImage.step % align_8_bytes == 0) {
@@ -54,4 +54,19 @@ yarp::sig::ImageOf<yarp::sig::PixelRgb> fromCvMat(::cv::Mat& cvImage)
     return outImg;
 }
 
+// ... But it turned out to be less effort than combining the two slightly incompatible library updates - here it is.
+yarp::sig::ImageOf<yarp::sig::PixelMono> monoFromCvMat(::cv::Mat& cvImage)
+{
+    constexpr size_t align_8_bytes = 8;
+    constexpr size_t align_4_bytes = 4;
+
+    yarp::sig::ImageOf<yarp::sig::PixelMono> outImg;
+    // No colour conversion required - we are grey.
+    assert(CV_8U == cvImage.type());
+    
+    outImg.setExternal(cvImage.data, cvImage.cols, cvImage.rows);
+    return outImg;
+
 }
+
+}  // end of namespace coursework
