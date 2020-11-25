@@ -45,31 +45,26 @@
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
 
-            if(image!=nullptr){
+            cv::Mat cvImage, imageCopy; //Create cv images, one for original image and one for marker overlay.
+            cvImage = coursework::toCvMat(*image);
+            cvImage.copyTo(imageCopy);
 
-                //Convert yarp image to CV format
-                cv::Mat cvImage = coursework::toCvMat(*image);
+            //Convert yarp image to CV format
 
-                //Code adapted from https://docs.opencv.org/master/d5/dae/tutorial_aruco_detection.html
-                //Setup the marker detection function
-                std::vector<int> markerIds;
-                std::vector<std::vector<cv::Point2f>> markerCorners;
+            //Code adapted from https://docs.opencv.org/master/d5/dae/tutorial_aruco_detection.html
+            //Setup the marker detection function
+            std::vector<int> ids;
+            std::vector<std::vector<cv::Point2f> > corners;
 
-                cv::aruco::detectMarkers(cvImage, dictionary, markerCorners, markerIds);
+            cv::aruco::detectMarkers(cvImage, dictionary, corners, ids);
 
-               
+            if (ids.size() > 0) //If at least one marker found
+                cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
 
                 //Output the markers onto the image
-                cv::Mat outputImage = cvImage.clone();
-                cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
-                outImage = coursework::fromCvMat<PixelRgb>(outputImage);
-                outPort.write();
-
-
-            }
-    
-        }
-
-   return 0;
-}
-   
+                cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
+                outImage = coursework::fromCvMat(imageCopy);
+                outPort.write();  
+            }  
+    return 0;
+    }

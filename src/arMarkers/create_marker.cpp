@@ -50,7 +50,7 @@ const char* keys  =
 }
 
 
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
     CommandLineParser parser(argc, argv, keys);
     parser.about(about);
 
@@ -86,4 +86,4 @@ int main(int argc, char *argv[]) {
     imwrite(out, markerImg);
 
     return 0;
-}
+}*/

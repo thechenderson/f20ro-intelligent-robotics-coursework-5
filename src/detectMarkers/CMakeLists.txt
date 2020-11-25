@@ -6,7 +6,9 @@
 # Replace "yarpy" with whatever your executable should be called.
 
 cmake_minimum_required(VERSION 3.5)
-project(detect_markers)
+project(detectMarkers)
+
+set(CMAKE_MODULE_PATH "/home/user/software/opencv" ${CMAKE_MODULE_PATH})
 
 # Find YARP.  Point the YARP_DIR environment variable at your build.
 find_package(YARP REQUIRED)
