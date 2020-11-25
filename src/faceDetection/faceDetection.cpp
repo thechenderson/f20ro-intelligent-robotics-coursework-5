@@ -53,8 +53,7 @@
                 cv::Mat cvImage = coursework::toCvMat(*image);
 
                 // actual work
-//                auto faced_image = coursework::recogniseAndBoxFaces(haarCascade, cvImage);
-                auto faced_image = cvImage;
+                auto faced_image = coursework::recogniseAndBoxFaces(haarCascade, cvImage);
 
                 // return to yarp format
                 outImage = coursework::fromCvMat(faced_image);
