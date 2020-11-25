@@ -13,6 +13,7 @@
  #include <yarp/os/Property.h>
  #include <string>
  #include <memory>
+ #include <exception>
 
 #include <opencv2/opencv.hpp>
 
@@ -23,7 +24,7 @@
     using namespace yarp::os;
 
     // Data for initialising the face boxing algorithm
-    const std::string haar_cascade_data_filename = "haarcascade_frontalface_default.xml";  //"/home/user/software/git/opencv/data/haarcascades/haarcascade_frontalface_default.xml";
+    const std::string haar_cascade_data_filename = "/home/user/software/git/opencv/data/haarcascades/haarcascade_frontalface_default.xml"; //"haarcascade_frontalface_default.xml";  //"/home/user/software/git/opencv/data/haarcascades/haarcascade_frontalface_default.xml";
 
 
     int main(int argc, char *argv[])
@@ -34,8 +35,11 @@
         Network yarp;
 
         // initialise the face boxing algorithm
-        const std::shared_ptr<cv::CascadeClassifier> haarCascade;
+        const std::shared_ptr<cv::CascadeClassifier> haarCascade = std::make_shared<cv::CascadeClassifier>();
         haarCascade->load(haar_cascade_data_filename);
+        if(haarCascade-> empty()) {
+            throw std::runtime_error("haarCascade loading failed.");
+        }
 
         BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
         BufferedPort<ImageOf<PixelRgb> > outPort;

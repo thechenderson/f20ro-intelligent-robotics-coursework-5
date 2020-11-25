@@ -8,6 +8,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(faceDetection)
 
+set(CMAKE_MODULE_PATH "/home/user/software/opencv" ${CMAKE_MODULE_PATH})
 
 # Find YARP.  Point the YARP_DIR environment variable at your build.
 find_package(YARP REQUIRED)

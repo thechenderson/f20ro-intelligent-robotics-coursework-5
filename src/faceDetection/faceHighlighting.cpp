@@ -15,7 +15,7 @@ namespace coursework {
        cv::Mat original = inputImage.clone();
        // Convert the current frame to grayscale:
        cv::Mat gray;
-       cv::cvtColor(original, gray, CV_BGR2GRAY);
+       cv::cvtColor(original, gray, cv::COLOR_BGR2GRAY);
        // Find the faces in the frame:
        std::vector<cv::Rect_<int>> faces;
        haar_cascade->detectMultiScale(gray, faces);
