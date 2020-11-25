@@ -48,9 +48,7 @@ const char* keys  =
         "{bb       | 1     | Number of bits in marker borders }"
         "{si       | false | show generated image }";
 }
-
-
-/*int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     CommandLineParser parser(argc, argv, keys);
     parser.about(about);
 
@@ -86,4 +84,4 @@ const char* keys  =
     imwrite(out, markerImg);
 
     return 0;
-}*/
+}

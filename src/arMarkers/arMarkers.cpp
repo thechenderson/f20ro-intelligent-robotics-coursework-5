@@ -59,8 +59,6 @@
             cv::aruco::detectMarkers(cvImage, dictionary, corners, ids);
 
             if (ids.size() > 0) //If at least one marker found
-                cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
-
                 //Output the markers onto the image
                 cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
                 outImage = coursework::fromCvMat(imageCopy);
