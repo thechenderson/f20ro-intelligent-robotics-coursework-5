@@ -18,10 +18,10 @@ sleep 2
 gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /icubSim/texture/screen;"
 sleep 1
 
-#Apply linear filter to new yarpview
-gnome-terminal -- /bin/bash -c "./../applyLinearFilter/build/applyLinearFilter"
-gnome-terminal -- /bin/bash -c "yarpview --name /view/Sobel_edges; exec bash"
+#Throw face boxing up onto new yarpview
+gnome-terminal -- /bin/bash -c "./../faceDetection/build/faceDetection"
+gnome-terminal -- /bin/bash -c "yarpview --name /view/faces; exec bash"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /imageProc/edgeDetection/in;"
+gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /faceDetection/in;"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /imageProc/edgeDetection/out /view/Sobel_edges;"
+gnome-terminal -- /bin/bash -c "yarp connect /faceDetection/out /view/faces;"
