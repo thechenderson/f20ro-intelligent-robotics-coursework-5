@@ -12,16 +12,19 @@
  #include <yarp/os/Time.h>
  #include <yarp/os/Property.h>
  #include <string>
+ #include <memory>
 
-// #include <yarp/cv/Cv.h>
- #include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
+
  #include "imageFormatConverter.hpp"
+ #include "faceHighlighting.hpp"
 
     using namespace yarp::sig;
     using namespace yarp::os;
 
-    // parameter for the Sobel filtering operation
-    const auto ddepth = CV_16S;    // number of bits per pixel for colour depth
+    // Data for initialising the face boxing algorithm
+    const std::string haar_cascade_data_filename = "haarcascade_frontalface_default.xml";  //"/home/user/software/git/opencv/data/haarcascades/haarcascade_frontalface_default.xml";
+
 
     int main(int argc, char *argv[])
     {
@@ -30,50 +33,36 @@
         // Network construction here allows for the use of ports
         Network yarp;
 
-        BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
-        BufferedPort<ImageOf<PixelMono> > outPort;
+        // initialise the face boxing algorithm
+        const std::shared_ptr<cv::CascadeClassifier> haarCascade;
+        haarCascade->load(haar_cascade_data_filename);
 
-        imagePort.open("/imageProc/edgeDetection/in");  // give the port a name
-        outPort.open("/imageProc/edgeDetection/out");
+        BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
+        BufferedPort<ImageOf<PixelRgb> > outPort;
+
+        imagePort.open("/faceDetection/in");  // give the port a name
+        outPort.open("/faceDetection/out");
         
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
-            ImageOf<PixelMono> &outImage = outPort.prepare(); //get an output image
+            ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
 
             if (image!=nullptr) { // check we actually got something
 
                 // convert to OpenCV format
                 cv::Mat cvImage = coursework::toCvMat(*image);
-//                cv::Mat cvImage = yarp::cv::toCvMat(*image);
 
-                // remove noise using a blur, then remove colour
-                cv::Mat blurredImg;
-                cv::GaussianBlur(cvImage, blurredImg, cv::Size(3, 3), 0, 0);
-
-                cv::Mat grayscaleImg;
-                cv::cvtColor(blurredImg, grayscaleImg, cv::COLOR_BGR2GRAY);
-
-                // detect edges!
-                cv::Mat x_derivatives, y_derivatives;
-                cv::Sobel(grayscaleImg, x_derivatives, ddepth, 1, 0);
-                cv::Sobel(grayscaleImg, y_derivatives, ddepth, 0, 1);
-
-                // Approximate the true edges as a sum of x and y changes
-                // Directions of derivatives don't matter, so remove the sign then combine.
-                cv::Mat abs_x_derivatives, abs_y_derivatives;
-                cv::convertScaleAbs(x_derivatives, abs_x_derivatives);
-                cv::convertScaleAbs(y_derivatives, abs_y_derivatives);
-
-                cv::Mat edges;
-                const float dimension_weight = 0.5;
-                cv::addWeighted(abs_x_derivatives, dimension_weight, abs_y_derivatives, dimension_weight, 0, edges);
+                // actual work
+//                auto faced_image = coursework::recogniseAndBoxFaces(haarCascade, cvImage);
+                auto faced_image = cvImage;
 
                 // return to yarp format
-                outImage = coursework::monoFromCvMat(edges);
-//                outImage = yarp::cv::fromCvMat<PixelMono>(edges);
+                outImage = coursework::fromCvMat(faced_image);
                 outPort.write();
             }
        }
    return 0;
    }
+
+
 
