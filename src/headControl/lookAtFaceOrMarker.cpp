@@ -10,7 +10,7 @@
    BufferedPort<Vector> targetPort;
    targetPort.open("/lookAtTarget/in");
    Network::connect("/faceDetection/faceVector/out","/lookAtTarget/in");
-   Network::connect("/imageProc/image/out","/lookAtTarget/in");
+//    Network::connect("/imageProc/image/out","/lookAtTarget/in");
 
    Property options;
    options.put("device", "remote_controlboard");
