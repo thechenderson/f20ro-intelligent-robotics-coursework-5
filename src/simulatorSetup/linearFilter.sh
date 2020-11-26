@@ -22,6 +22,6 @@ sleep 1
 gnome-terminal -- /bin/bash -c "./../applyLinearFilter/build/applyLinearFilter"
 gnome-terminal -- /bin/bash -c "yarpview --name /view/Sobel_edges; exec bash"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /imageProc/edgeDetection/in;"
+gnome-terminal -- /bin/bash -c "yarp connect /icubSim/cam/left /imageProc/edgeDetection/in;"
 sleep 2
 gnome-terminal -- /bin/bash -c "yarp connect /imageProc/edgeDetection/out /view/Sobel_edges;"

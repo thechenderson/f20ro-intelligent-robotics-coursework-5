@@ -22,6 +22,6 @@ sleep 1
 gnome-terminal -- /bin/bash -c "./../faceDetection/build/faceDetection"
 gnome-terminal -- /bin/bash -c "yarpview --name /view/faces; exec bash"
 sleep 2
-gnome-terminal -- /bin/bash -c "yarp connect /webcam/video /faceDetection/in;"
+gnome-terminal -- /bin/bash -c "yarp connect /icubSim/cam/left /faceDetection/in;"
 sleep 2
 gnome-terminal -- /bin/bash -c "yarp connect /faceDetection/out /view/faces;"
