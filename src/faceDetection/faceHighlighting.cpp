@@ -17,7 +17,7 @@ using namespace cv;
 
 namespace coursework {
 
-    FaceBoxingResults recogniseAndBoxFaces(const std::shared_ptr<cv::CascadeClassifier>& haar_cascade, const cv::Mat& inputImage) {
+    FaceBoxingResults recogniseAndBoxFaces(cv::CascadeClassifier* haar_cascade, const cv::Mat& inputImage) {
        // Clone the current frame:
        cv::Mat original = inputImage.clone();
        // Convert the current frame to grayscale:

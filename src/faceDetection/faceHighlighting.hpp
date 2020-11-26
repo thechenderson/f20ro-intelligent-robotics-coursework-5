@@ -5,5 +5,5 @@ namespace coursework {
         cv::Mat imageWithBoxes;
         std::vector<cv::Rect_<int>> faceboxLocations;
     };
-    FaceBoxingResults recogniseAndBoxFaces(const std::shared_ptr<cv::CascadeClassifier>& haar_cascade, const cv::Mat& inputImage);
+    FaceBoxingResults recogniseAndBoxFaces(cv::CascadeClassifier* haar_cascade, const cv::Mat& inputImage);
 }

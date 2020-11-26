@@ -37,9 +37,9 @@
         Network yarp;
 
         // initialise the face boxing algorithm
-        const std::shared_ptr<cv::CascadeClassifier> haarCascade = std::make_shared<cv::CascadeClassifier>();
-        haarCascade->load(haar_cascade_data_filename);
-        if(haarCascade-> empty()) {
+        cv::CascadeClassifier haarCascade;
+        haarCascade.load(haar_cascade_data_filename);
+        if(haarCascade.empty()) {
             throw std::runtime_error("haarCascade loading failed.");
         }
 
@@ -55,7 +55,7 @@
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
-            std::vector<cv::Rect_<int>>& outVector = facePort.prepare().content(); // get an output vector of rectangles
+            Vector& outVector = facePort.prepare().content(); // get an output vector of rectangles
 
             if (image!=nullptr) { // check we actually got something
 
@@ -63,15 +63,15 @@
                 cv::Mat cvImage = coursework::toCvMat(*image);
 
                 // actual work
-                auto faceBoxes= coursework::recogniseAndBoxFaces(haarCascade, cvImage);
+                auto faceBoxes= coursework::recogniseAndBoxFaces(&haarCascade, cvImage);
 
                 // Don't even try if there's nothing to return
-                if (faceBoxes.imageWithBoxes.empty()) {
+                if (faceBoxes.imageWithBoxes.empty() || faceBoxes.faceboxLocations.empty()) {
                     continue;
                 }
                 // return to yarp format
                 outImage = coursework::fromCvMat(faceBoxes.imageWithBoxes);
-                outVector = faceBoxes.faceboxLocations;
+                outVector = std::vector<cv::Rect_<int>>({faceBoxes.faceboxLocations[0]});
                 outPort.write();
                 facePort.write();
             }
