@@ -38,7 +38,7 @@
       pos->getAxes(&jnts);
       Vector setpoints;
       setpoints.resize(jnts);
-      for(int i = 0; i<=jnts; i++)
+      for(int i = 0; i<jnts; i++)
 	   con->setControlMode(i, VOCAB_CM_VELOCITY);
       vel->velocityMove(setpoints.data());
     
