@@ -45,7 +45,7 @@
 
         BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
         BufferedPort<ImageOf<PixelRgb> > outPort;
-        BufferedPort<BinPortable<std::vector<cv::Rect_<int>>>> facePort;  // is a face port a mouth? Either way this is where we spit out the face squares.
+        BufferedPort<Vector> facePort;  // is a face port a mouth? Either way this is where we spit out the face squares.
 
         imagePort.open("/faceDetection/in");  // give the port a name
         outPort.open("/faceDetection/out");
@@ -55,7 +55,7 @@
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
-            Vector& outVector = facePort.prepare().content(); // get an output vector of rectangles
+            Vector& outVector = facePort.prepare(); // get an output vector of rectangles
 
             if (image!=nullptr) { // check we actually got something
 
@@ -71,7 +71,10 @@
                 }
                 // return to yarp format
                 outImage = coursework::fromCvMat(faceBoxes.imageWithBoxes);
-                outVector = std::vector<cv::Rect_<int>>({faceBoxes.faceboxLocations[0]});
+                outVector.resize(2);
+                outVector[0] = faceBoxes.faceboxLocations[0].x;
+                outVector[1] = faceBoxes.faceboxLocations[0].y;
+                outVector[2] = 1;  // anything can pass as a face these days
                 outPort.write();
                 facePort.write();
             }
