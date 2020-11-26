@@ -2,15 +2,21 @@
 
 # load optional flags
 REBUILD=0
+DEBUG=0
 while [ ! $# -eq 0 ]
 do
 	case "$1" in
 		--help | -h)
-			echo "Use --rebuild to clean all and rebuild - default does not clean."
+			echo "By default, this makes build directories, then runs cmake and make for you."
+            echo "    -r  --rebuild    to clean all and rebuild"
+            echo "    -d  --debug      make debug builds instead of optimised release builds"
 			exit
 			;;
 		--rebuild | -r)
 			REBUILD=1
+			;;
+		--debug | -d)
+			DEBUG=1
 			;;
 	esac
 	shift
@@ -38,7 +44,14 @@ for dir in */; do
         fi
         mkdir ${dir%?}/build
         cd ${dir%?}/build
-        cmake ..
+        if [ $DEBUG == 1 ]; then
+            echo "Setting cmake to build DEBUG (slow, allows debugging)"
+            cmake -DCMAKE_BUILD_TYPE=Release ..
+            
+        else
+            echo "Setting cmake to build RELEASE (fast, no debug)"
+            cmake ..
+        fi
         make
 
         # go back to src
