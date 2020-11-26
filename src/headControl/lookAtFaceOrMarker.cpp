@@ -9,7 +9,7 @@
    Network yarp; // set up yarp
    BufferedPort<Vector> targetPort;
    targetPort.open("/lookAtTarget/in");
-   Network::connect("/faceDetection/out","/lookAtTarget/in");
+   Network::connect("/faceDetection/faceVector/out","/lookAtTarget/in");
    Network::connect("/imageProc/image/out","/lookAtTarget/in");
 
    Property options;
