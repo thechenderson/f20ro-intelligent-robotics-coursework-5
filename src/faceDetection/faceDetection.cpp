@@ -65,6 +65,10 @@
                 // actual work
                 auto faceBoxes= coursework::recogniseAndBoxFaces(haarCascade, cvImage);
 
+                // Don't even try if there's nothing to return
+                if (faceBoxes.imageWithBoxes.empty()) {
+                    continue;
+                }
                 // return to yarp format
                 outImage = coursework::fromCvMat(faceBoxes.imageWithBoxes);
                 outVector = faceBoxes.faceboxLocations;

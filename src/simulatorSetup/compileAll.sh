@@ -46,7 +46,7 @@ for dir in */; do
         cd ${dir%?}/build
         if [ $DEBUG == 1 ]; then
             echo "Setting cmake to build DEBUG (slow, allows debugging)"
-            cmake -DCMAKE_BUILD_TYPE=Release ..
+            cmake -DCMAKE_BUILD_TYPE=Debug ..
             
         else
             echo "Setting cmake to build RELEASE (fast, no debug)"
