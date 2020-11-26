@@ -32,8 +32,8 @@
     {
         Network yarp;
     
-        BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
-        BufferedPort<ImageOf<PixelRgb> > outPort;
+        BufferedPort<ImageOf<PixelRgb> > imagePort;     // make a port for reading images
+        BufferedPort<ImageOf<PixelRgb> > outPort;       //Make a port for outputing images
 
         imagePort.open("/imageProc/image/in");  // give the port a name
         outPort.open("/imageProc/image/out");
@@ -56,12 +56,13 @@
             std::vector<int> ids;
             std::vector<std::vector<cv::Point2f> > corners;
 
+            //Detect markers using set dictionary
             cv::aruco::detectMarkers(cvImage, dictionary, corners, ids);
 
             if (ids.size() > 0) //If at least one marker found
                 //Output the markers onto the image
                 cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
-                outImage = coursework::fromCvMat(imageCopy);
+                outImage = coursework::fromCvMat(imageCopy); //Convert image back to yarp format
                 outPort.write();  
             }  
     return 0;
