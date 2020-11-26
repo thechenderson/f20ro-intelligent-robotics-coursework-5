@@ -1,7 +1,8 @@
-// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 /*
- * Edge detection using the a convolutional filter with the Sobel operator.
- * Author for F21IRO @ Hamish MacKinnon, him2
+ * Face detection using a pretrained Haar Cascade.
+ * The approach taken in this module is the same as the official OpenCV tutorial here:
+ * https://docs.opencv.org/2.4/modules/contrib/doc/facerec/tutorial/facerec_video_recognition.html
+ * Composed for F21IRO by @ Hamish MacKinnon, him2
  */
 
  #include <stdio.h>
@@ -43,25 +44,43 @@
 
         BufferedPort<ImageOf<PixelRgb> > imagePort;  // make a port for reading images
         BufferedPort<ImageOf<PixelRgb> > outPort;
+        BufferedPort<Vector> facePort;  // is a face port a mouth? Either way this is where we spit out the face squares.
 
         imagePort.open("/faceDetection/in");  // give the port a name
         outPort.open("/faceDetection/out");
+
+        facePort.open("/faceDetection/faceVector/out");
         
         while (1) { // repeat forever
             ImageOf<PixelRgb> *image = imagePort.read();  // read an image
             ImageOf<PixelRgb> &outImage = outPort.prepare(); //get an output image
+            Vector& outVector = facePort.prepare(); // get an output vector of rectangles
 
             if (image!=nullptr) { // check we actually got something
 
                 // convert to OpenCV format
                 cv::Mat cvImage = coursework::toCvMat(*image);
-
+                cv::Mat outputimage;
+                
                 // actual work
-                auto faced_image = coursework::recogniseAndBoxFaces(haarCascade, cvImage);
+                std::vector<cv::Rect_<int>> face_corners = coursework::recogniseAndBoxFaces(haarCascade, cvImage,  outputimage);
 
-                // return to yarp format
-                outImage = coursework::fromCvMat(faced_image);
+                // Don't even try if there's nothing to return
+                if (face_corners.empty()) {
+                    continue;
+                }
+                // return image to yarp format
+                outImage = coursework::fromCvMat(outputimage);
                 outPort.write();
+
+                // send only the coordinates of the first rectangle's top corner
+                // assuming matrix style coordinates with 0, 0 in the top left
+                outVector.resize(3);
+                outVector[0] = face_corners[0].x + static_cast<float>(face_corners[0].width)/ 2.0f;
+                outVector[1] = face_corners[0].y + static_cast<float>(face_corners[0].height)/ 2.0f;
+                outVector[2] = 1;  // "Confidence" is expected - fake it till you make it!
+                
+
             }
        }
    return 0;
