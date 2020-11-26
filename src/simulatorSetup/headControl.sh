@@ -13,10 +13,10 @@ gnome-terminal -- /bin/bash -c "yarp connect /icubSim/cam/left /view/left;"
 sleep 1 
 
 #Set up video from webcam
-gnome-terminal -- /bin/bash -c "yarpdev --device opencv_grabber --name /webcam/video; exec bash"
+gnome-terminal -- /bin/bash -c "yarpdev --device opencv_grabber --period 0.5 --name /webcam/video; exec bash"
 sleep 2 
 
-# #Throw face boxing up onto new yarpview
+#Throw face boxing up onto new yarpview
 gnome-terminal -- /bin/bash -c "./../faceDetection/build/faceDetection"
 gnome-terminal -- /bin/bash -c "yarpview --name /view/faces; exec bash"
 sleep 2
