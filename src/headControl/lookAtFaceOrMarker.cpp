@@ -38,9 +38,10 @@
       pos->getAxes(&jnts);
       Vector setpoints;
       setpoints.resize(jnts);
-      for(int i = 0; i<jnts; i++)
-	   con->setControlMode(i, VOCAB_CM_VELOCITY);
-      vel->velocityMove(setpoints.data());
+//       for(int i = 0; i<jnts; i++)
+// 	   con->setControlMode(i, VOCAB_CM_VELOCITY);
+//       vel->velocityMove(setpoints.data());
+      pos->positionMove(setpoints.data()); 
     
       while (1) { // repeat forever
         Vector *target = targetPort.read();  // read a target
@@ -77,7 +78,8 @@
              setpoints[3] = 0;
              setpoints[4] = 0;
         }
-        vel->velocityMove(setpoints.data());
+	pos->positionMove(setpoints.data());      
+//         vel->velocityMove(setpoints.data());
 	yarp::os::Time::delay(0.01);
       }
       return 0;
