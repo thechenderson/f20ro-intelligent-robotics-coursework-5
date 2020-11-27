@@ -15,7 +15,8 @@ int main(int argc, const char **argv)
 {
 
 	Network yarp;
-
+	
+	//Get the ID of the marker
 	BufferedPort<Bottle> target_ID;
 	target_ID.open("/wave/markerReceived");
 	Network::connect("/marker/markerSend", "/wave/markerReceived");
