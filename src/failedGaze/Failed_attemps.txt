@@ -1,3 +1,12 @@
-Thoses are failed attemps of make the robot head move in a non-exorcist movie like way.
+Thoses are failed attemps to make the robot head move in a non-"exorcist movie" or unatural dead weight like way.
+
+gaze0: based on lab3
+gaze1: iGaze publish to iKinGazeCtrl/xd:i
+gaze2: iGaze manual control with bottle
+  Carthesian is display in the file
+  Monopixel has been tried
+  Plane3D has been tried
+
+Other foolish attemps like publishing directly to /iCubsim/head/rpc:i has been tried
 
 By Adrien Drapala-Bizouarn
