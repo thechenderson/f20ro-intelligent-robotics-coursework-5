@@ -1,20 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 #include <yarp/dev/all.h>
+#include <string>
 
 using namespace yarp::os;
 using namespace yarp::sig;
 using namespace yarp::dev;
+using namespace std;
 
 int main(int argc, const char **argv)
 {
 
 	Network yarp;
-	
-	bool MarkerDetection = true;
-	
+
+	BufferedPort<Bottle> target_ID;
+	target_ID.open("/wave/markerReceived");
+	Network::connect("/marker/markerSend", "/wave/markerReceived");
+	Bottle *marker_IDb = target_ID.read();
+	string marker_ID = marker_IDb->toString();
+
 	//Options of right arm
 	Property options; 
 	options.put("device", "remote_controlboard");
@@ -31,7 +38,7 @@ int main(int argc, const char **argv)
 	//Create object to get the data from the right arm
 	IPositionControl *pos;
 	IEncoders *enc;
-	IControlMode2 *ictrl;
+	IControlMode *ictrl;
 	robotDev.view(pos);
 	robotDev.view(enc);
 	robotDev.view(ictrl);
@@ -48,10 +55,10 @@ int main(int argc, const char **argv)
 	setpoints.resize(joints);
 	Encoders.resize(joints);
 	
-	//Modify every joint with parameters
+	//Set right arm joints in Position mode
 	for (int i = 0; i < joints; i++)
 	{
-	  ictrl->setControlMode(i, VOCAB_CM_POSITION); //set right hand joints in position mode
+	  ictrl->setControlMode(i, VOCAB_CM_POSITION); 
 	  setpoints[i] = 0;
 	}
 
@@ -59,17 +66,17 @@ int main(int argc, const char **argv)
 	pos->positionMove(0, -90);
 	pos->positionMove(1, 90);
 
-	while(MarkerDetection) {
-		//Motion of wave (not the Queen's one)
-		if (Encoders[3] >= 80)
-		{
-		  pos->positionMove(3, 40);
+	while(1) {
+		if (marker_ID.compare("42") == 0) {
+			//Motion of wave (not the Queen's one)
+			if (Encoders[3] >= 80)
+				pos->positionMove(3, 40);
+
+			if (Encoders[3] <= 50)
+				pos->positionMove(3, 90);
+
+			//Update values of the encoders
+			enc->getEncoders(Encoders.data());
 		}
-		if (Encoders[3] <= 50)
-		{
-		  pos->positionMove(3, 90);
-		}
-		//Update values of the encoders
-		enc->getEncoders(Encoders.data());
 	}
 }
